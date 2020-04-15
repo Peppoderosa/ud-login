@@ -6,7 +6,8 @@ import PasswordModal from "../../components/ModalPasswordRecover";
 //JasonWebToken
 import jwt from "../../utils/JasonWebToken/jwt";
 //utils
-import verify from "./utils";
+import { verifyLogin } from "../../utils/functions";
+import api from "../..//utils/API/axios";
 //css
 import "./styles.css";
 
@@ -23,16 +24,23 @@ export default function Login() {
     setShow(false);
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const payload = {
-      cpf,
+      username: cpf,
       password,
     };
-    if (verify({ payload })) {
-      jwt(payload);
+    if (verifyLogin({ payload })) {
+      const data = jwt(payload);
+      let config = {
+        headers: {
+          Authorization: Bearer + data,
+        },
+      };
+      const response = await api.post("/session", data, config);
+      console.log("reponse");
     } else {
-      console.log("Erro");
+      alert("Erro");
     }
 
     setCpf("");
@@ -74,7 +82,7 @@ export default function Login() {
           show={show}
           onHide={handleClose}
         >
-          <PasswordModal handleSendModal={handleClose}></PasswordModal>
+          <PasswordModal handleSClose={handleClose}></PasswordModal>
         </Modal>
       </div>
     </>

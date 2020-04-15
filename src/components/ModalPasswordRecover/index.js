@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
+import { verifyRecover } from "../../utils/functions";
+import jwt from "../../utils/JasonWebToken/jwt";
 import "./styles.css";
 
-export default function ModalPasswordRecover(handleSendModal) {
+export default function ModalPasswordRecover() {
   const [cpfR, setCpfR] = useState("");
   function handleSendModal() {
-    console.log(cpfR);
+    const payload = {
+      username: cpfR,
+    };
+
+    if (verifyRecover({ payload })) {
+      jwt(payload);
+    } else {
+      alert("Erro");
+    }
     setCpfR("");
   }
 

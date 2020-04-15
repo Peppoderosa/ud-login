@@ -1,16 +1,21 @@
-export default function verify({ payload }) {
-  var flag = false;
+function verifyLogin({ payload }) {
   if (payload.cpf === "" || payload.password === "") {
-    flag = false;
+    return false;
+  } else if (TestCPF(payload.username)) {
+    return true;
   } else {
-    flag = true;
+    return false;
   }
-  if (TestCPF(payload.cpf)) {
-    flag = true;
+}
+
+function verifyRecover({ payload }) {
+  if (payload.username === "") {
+    return false;
+  } else if (TestCPF(payload.username)) {
+    return true;
   } else {
-    flag = false;
+    return false;
   }
-  return flag;
 }
 
 function TestCPF(strCPF) {
@@ -33,3 +38,4 @@ function TestCPF(strCPF) {
   if (Resto !== parseInt(strCPF.substring(10, 11))) return false;
   return true;
 }
+export { verifyLogin, verifyRecover };
